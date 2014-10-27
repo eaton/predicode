@@ -1,2 +1,4 @@
 .vagrant
 logs
+.DS_Store
+db
