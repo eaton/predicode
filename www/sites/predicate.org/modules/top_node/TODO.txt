@@ -1,0 +1,3 @@
+$Id$
+
+top_node_plugin_style_full_node.inc, line 23. 'Nuff said.

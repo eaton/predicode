@@ -1,0 +1,6 @@
+name = Predibot
+package = Bot
+dependencies[] = bot
+dependencies[] = bot_auth
+description = "Special bot toys for Predicate.org."
+core = 7.x

@@ -1,0 +1,449 @@
+/* $Id */
+
+/**
+ * Utility classes
+ */
+.element-hidden {
+  display: none;
+}
+.element-invisible {
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  padding: 0;
+}
+html.js .js-hide {
+  display: none;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.clearfix:after,
+.clear-block:after {
+  content: ".";
+  display: block;
+  font-size: 0;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/**
+** Tabs
+*/
+.tabs {
+  margin: 14px 0;
+}
+.tabs ul.tabs {
+  margin-left: 0;
+}
+.tabs ul.tabs li {
+  display: inline-block;
+  padding-left: 0;
+  margin-right: 5px;
+  background-image: none;
+}
+.tabs ul.tabs li a {
+  background-color: #F5F5F5;
+  border: 1px solid #C6C6C6;
+  font-size: 11px;
+  color: #444444;
+  display: block;
+  padding: 5px 16px;
+}
+.tabs ul.tabs li.active a {
+  background-color: #ffffff;
+}
+.tabs ul.tabs li a:active,
+.tabs ul.tabs li a:focus {
+  outline: none;
+}
+.tabs ul.secondary {
+  margin-top: -14px;
+}
+.tabs ul.secondary li a {
+  font-size: 12px;
+  padding: 2px 12px ;
+}
+.tabs a::selection {
+	background-color: #444444;
+  color: #ffffff;
+}
+.tabs a::-moz-selection {
+	background-color: #444444;
+  color: #ffffff;
+}
+
+/**
+** Vertical tabs
+*/
+.vertical-tabs {
+  border: 1px solid #CCCCCC;
+  margin: 18px 0;
+}
+.vertical-tabs fieldset {
+  background-color: inherit;
+}
+.vertical-tabs .form-item:first-of-type {
+  margin-top: 6px;
+}
+ul.vertical-tabs-list {
+  display: table-cell;
+  vertical-align: top;
+  width: 165px;
+  margin: 0;
+}
+ul.vertical-tabs-list li {
+  background-image: none;
+  padding: 0;
+  margin: 0;
+}
+ul.vertical-tabs-list li a {
+  background-color: #F5F4F3;
+  font-size: 0.9em;
+  display: block;
+  padding: 7px 12px;
+  font-weight: 700;
+  color: inherit;
+  border-right: 1px solid #CCCCCC; /* LTR */
+  border-bottom: 1px solid #CCCCCC;
+}
+ul.vertical-tabs-list li a strong {
+}
+ul.vertical-tabs-list li a:focus {
+  outline: none;
+}
+ul.vertical-tabs-list span.summary {
+  display: none;
+}
+ul.vertical-tabs-list li.selected a {
+  background-color: #ffffff;
+  border-right: none; /* LTR */
+}
+.vertical-tabs-panes {
+  display: table-cell;
+  vertical-align: top;
+  padding: 10px 0;
+}
+fieldset.vertical-tabs-pane {
+  margin: 0;
+  padding: 0px 15px 10px 15px;
+  border: none;
+  background-color: inherit;
+}
+fieldset.vertical-tabs-pane legend,
+ul.vertical-tabs-list small.summary {
+  display: none;
+}
+.vertical-tabs input {
+  width: 100%;
+}
+
+/**
+** Pagers
+*/
+ul.pager {
+  margin-left: 0;
+  margin: 10px 0 2px 0;
+}
+ul.pager li {
+  padding: 0;
+  display: table-cell;
+  background: none;
+}
+ul.pager li.last {
+  border-right: none;
+}
+ul.pager li a,
+ul.pager li.pager-current,
+ul.pager li.pager-ellipsis {
+  font-size: 0.9em;
+  padding: 0px 8px;
+}
+ul.pager li.pager-previous {
+  padding-right: 8px;
+}
+ul.pager li.pager-next {
+  padding-left: 8px;
+}
+ul.pager li.pager-next a {
+}
+
+/**
+** Breadcrumbs
+*/
+#breadcrumb {
+  margin: 0 0 8px 0;
+}
+.breadcrumb a {
+  font-size: 0.9em;
+}
+
+/**
+** Action links
+*/
+ul.action-links {
+  margin: 6px 0;
+}
+ul.action-links li {
+  padding-left: 0;
+  background: none;
+}
+
+/**
+** Messages
+*/
+#messages {
+  margin: 10px 0;
+}
+.messages {
+  padding: 10px;
+  margin: 10px 0;
+  color: #ffffff;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+#messages:first-child {
+  margin-top: 0;
+}
+.messages em {
+  font-weight: 300;
+}
+div.messages a {
+  color: #fff;
+  text-decoration: underline;
+}
+.messages a:hover {
+  color: #fff;
+}
+.messages a:hover {
+  border-bottom: none;
+}
+.messages.status {
+  background-color: #92ac1d;
+}
+.messages.warning {
+  background-color: #e7a110;
+}
+.messages.error {
+  background-color: #d93c26;
+}
+.messages ul li {
+  background-image: url("images/bullet-white.png");
+}
+.messages em {
+  font-weight: 300;
+}
+
+/**
+ * Autocompletion list
+ */
+#autocomplete {
+  position: absolute;
+  border: 1px solid;
+  overflow: hidden;
+  z-index: 100;
+}
+#autocomplete ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  list-style-image: none;
+}
+#autocomplete li {
+  background: #ffffff;
+  color: #000000;
+  white-space: pre;
+  cursor: default;
+}
+#autocomplete li.selected {
+  background: #0072b9;
+  color: #ffffff;
+}
+
+/**
+ * Collapsing fieldsets
+ */
+html.js fieldset.collapsible {
+  margin: 30px 0 15px 0;
+}
+html.js fieldset.collapsible legend a {
+  padding: 0 15px 0 0;
+  margin: 0 2px 0 0;
+  background: url("images/arrow-down-white.png") no-repeat right 4px;
+  color: #F3F3F3;
+}
+html.js fieldset.collapsible legend a:active,
+html.js fieldset.collapsible legend a:focus {
+  outline: none;
+  text-decoration: underline;
+}
+html.js fieldset.collapsed legend a {
+  background: url(images/arrow-right-white.png) no-repeat right 2px;
+}
+html.js fieldset.collapsed .fieldset-wrapper,
+html.js fieldset.collapsed .action {
+  display: none;
+}
+html.js fieldset.collapsed {
+  padding: 4px 19px;
+}
+
+/*
+ * Resizable textareas
+ */
+.resizable-textarea .grippie {
+  position: relative;
+  top: -3px;
+  width: 100%;
+  height: 9px;
+  background-image: url(images/grippie.png);
+  background-repeat: no-repeat;
+  background-position: center 1px;
+  border-top-width: 0;
+  cursor: s-resize;
+  margin-top: -2px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/**
+ * Table drag and drop
+ */
+body.drag {
+  cursor: move;
+}
+tr.drag {
+  background-color: #e1f5fb;
+}
+tr.drag-previous {
+  background-color: #f3fbfe;
+}
+td.choice-flag {
+  padding: 11px 0px 11px 12px;
+}
+span.tabledrag-changed {
+  font-size: 15px;
+  margin-left: 3px;
+  color: red;
+  font-weight: 700;
+} 
+a.tabledrag-handle {
+  text-decoration: none;
+  cursor: move;
+  display: inline-block;
+}
+a.tabledrag-handle:hover {
+  text-decoration: none;
+}
+a.tabledrag-handle .handle {
+  height: 13px;
+  width: 13px;
+  margin: 0 14px 0 0;
+  background: url(images/draggable.png) no-repeat 0 0;
+}
+a.tabledrag-handle-hover .handle {
+  background-position: 0 -20px;
+}
+.indentation {
+  width: 20px;
+  float: left;
+}
+
+/**
+* Table sort
+ */
+th a,
+thead a {
+  color: #ffffff!important;
+  white-space: nowrap;
+}
+th a:hover,
+thead a:hover,
+th a:focus,
+thead a:focus {
+  color: #ffffff;
+}
+th a:focus,
+thead a:focus {
+  outline-color: #ffffff;
+}
+table img {
+  margin: 0 0 0 4px;
+}
+
+/**
+ * Progress bar
+ */
+.progress {
+  font-weight: bold;
+}
+.progress .bar {
+  background: #ccc;
+  border: 1px solid #666;
+  margin: 0 0.2em;
+}
+.progress .filled {
+  height: 1.5em;
+  width: 5px;
+}
+.progress .percentage {
+  float: right;
+}
+.progress-disabled {
+  float: left;
+}
+.ajax-progress {
+  float: left;
+}
+.ajax-progress-bar {
+  width: 16em;
+}
+
+/**
+ * Password strength indicator
+ */
+.password-parent {
+  width: 420px;
+}
+#password-strength {
+  width: 175px;
+  float: right; /* LTR */
+  margin-top: 16px;
+}
+#password-strength-text {
+  float: right;
+  font-weight: bold;
+}
+div.password-confirm {
+  visibility: hidden;
+}
+#password-indicator {
+  border: 1px solid #989898;
+  margin-top: 3px;
+  background-color: #F5F5F5;
+  height: 8px;
+}
+#password-indicator div {
+  height: 100%;
+  width: 0%;
+  background-color: #9EB42C;
+}
+input.password-confirm, input.password-field {
+}
+.password-confirm {
+  display: inline;
+  padding-left: 1em;
+}
+.form-item .password-suggestions {
+  padding: 8px 9px;
+  margin: 10px 0;
+  background-color: #f3fcdb;
+  border: 1px solid #b8e643;
+}
+.password-suggestions ul {
+  margin: 8px 0 0 9px;
+}
+

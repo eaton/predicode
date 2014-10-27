@@ -1,0 +1,58 @@
+<?php
+// $Id: mobile_theme.module,v 1.1.2.1.4.1 2010/02/08 06:45:04 robloach Exp $
+
+/**
+ * Check to see if the user is running on a mobile browser.
+ */
+function mobile_theme_custom_theme() {
+  // @TODO: Provide Browscap support.
+  $browser = get_browser(NULL, TRUE);
+  if (isset($browser['ismobiledevice'])) {
+    if ($browser['ismobiledevice']) {
+      $theme = variable_get('mobile_theme_selection', 'default');
+      if ($theme != 'default') {
+        return $theme;
+      }
+    }
+  }
+}
+
+/**
+ * Alter the system theme settings form to add the mobile theme settings.
+ */
+function mobile_theme_form_system_theme_settings_alter(&$form, $form_state, $form_id) {
+  if ($form['var']['#value'] == 'theme_settings') {
+    $themes = array('default' => t('Default'));
+    $options = list_themes();
+    foreach ($options as $name => $attr) {
+      if ($attr->status) {
+        $themes[$name] = $attr->info['name'];
+      }
+    }
+    $form['mobile_theme'] = array(
+      '#type' => 'fieldset',
+      '#prefix' => '<div class="theme-settings-right">',
+      '#suffix' => '</div>',
+      '#title' => t('Mobile theme'),
+      '#description' => t('Choose which theme will be used when the user is on a mobile device.'),
+      'mobile_theme_selection' => array(
+        '#type' => 'select',
+        '#title' => 'Mobile theme',
+        '#description' => t('The theme to use when serving a mobile device.'),
+        '#options' => $themes,
+        '#default_value' => variable_get('mobile_theme_selection', 'default'),
+      ),
+      '#weight' => -4,
+    );
+    $form['#submit'][] = 'mobile_theme_settings_submit';
+  }
+}
+
+/**
+ * Submit handler on the theme settings to save the mobile theme.
+ */
+function mobile_theme_settings_submit($form, $form_state) {
+  if (isset($form_state['values']['mobile_theme_selection'])) {
+    variable_set('mobile_theme_selection', $form_state['values']['mobile_theme_selection']);
+  }
+}

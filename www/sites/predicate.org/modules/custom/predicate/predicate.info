@@ -1,0 +1,5 @@
+name = Predicate
+description = Custom utilities for Predicate.org.
+core = 7.x
+
+files[] = predicate.module

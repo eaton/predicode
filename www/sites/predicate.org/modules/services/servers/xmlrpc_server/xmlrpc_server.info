@@ -1,0 +1,12 @@
+; $Id: xmlrpc_server.info,v 1.7 2010/12/10 03:12:35 ocyrus Exp $
+name = XMLRPC Server
+description = Provides an XMLRPC server.
+package = Services - servers
+dependencies[] = services
+core = 6.x
+; Information added by drupal.org packaging script on 2010-12-25
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "services"
+datestamp = "1293236706"
+

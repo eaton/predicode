@@ -1,0 +1,6 @@
+name = PagePeeker Screenshots
+description = Retieve web page screenshots from the <a target="_blank" href="http://pagepeeker.com/">PagePeeker</a> service.
+core = 7.x
+php = 5.2
+
+files[] = pagepeeker.test

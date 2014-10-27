@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ *
+ * Bot - achievements integration.
+ * Users can achieve via
+ * - karma related achievements (other people can reward/punish the user)
+ * - advancing a counter whenever they make a stupid mistake (lame counter)
+ *
+ * It uses bot_auth to link the IRC user to the Drupal one, for now the IRC user
+ * has to have an account on the bot site as well. Perhaps this can be automaticly created later?
+ */

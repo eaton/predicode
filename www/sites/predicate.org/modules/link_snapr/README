@@ -1,0 +1,3 @@
+Super-simple. Uses the WebSnapr public API to grab a 150x200 thumbnail,
+then uses is as the output of a FieldAPI Link field. Obviously, requires
+the Link module.

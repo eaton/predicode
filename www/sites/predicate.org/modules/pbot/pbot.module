@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * Implements hook_help().
+ */
+function pbot_help($path, $arg) {
+  switch ($path) {
+    case 'irc:features':
+      return array(t('Tagline'), t('Poll'));
+    case 'irc:features#tagline':
+      return t('Lets you create a Predicate.org tagline using the syntax: "!tagline <tagline>"');
+    case 'irc:features#poll':
+      return t('Lets you create a Predicate.org poll using the syntax: "!poll <question> (<answer>, <answer>, ...)"');
+  }
+}
+
+
+/**
+ * Listen for conversation directed at, or around, the bot.
+ *
+ * @param $data
+ *   The regular $data object prepared by the IRC library.
+ * @param $from_query
+ *   Boolean; whether this was a queried request.
+ */
+function pbot_irc_msg_channel($data, $from_query = FALSE) {
+  $types = array(
+    'poll' => 'poll',
+    'tagline' => 'tagline',
+    'caption' => 'caption_this',
+  );
+  
+  $match_types = join('|', array_keys($types));
+  
+  if (preg_match("/^\!(" . $match_types . ")\s+(.*)/i", trim($data->message), $matches)) {
+    $nodetype = $types[$matches[1]];
+    $raw = $matches[2];
+
+    if (($account = bot_auth_authed($data)) && node_access('create', $nodetype, $account)) {
+      switch ($nodetype) {
+        case 'poll':
+          preg_match("/^([^\(]+)(.*)\)?/i", trim($raw), $matches);
+          $question = trim($matches[1]);
+          $answers = str_replace(array('(',')'), '', $matches[2]);
+
+          $node = new stdClass();
+          $node->type = 'poll';
+          node_object_prepare($node);
+          $node->title = $question;
+          $node->uid = $account->uid;
+          $node->active = TRUE;
+          $node->allowvotes = TRUE;
+          $node->runtime = 604800; // 1 week
+    
+          if (!empty($answers)) {
+            $answers = split(',', $answers);
+          }
+          else {
+            $answers = _pbot_generate_answers();
+          }
+          
+          foreach ($answers as $answer) {
+            $node->choice[] = array(
+              'chtext' => trim($answer),
+              'chvotes' => 0,
+              'weight' => 1,
+            );
+          }
+          
+          node_save($node);
+          
+          $values = array(
+            '@question' => $question,
+            '!link' => url('node/'.$node->nid, array('absolute' => TRUE)),
+          );
+          $message = t('New poll: @question (!link)', $values);
+          $to = $from_query ? $data->nick : $data->channel;
+          bot_message($to, $message);
+          
+          break;
+ 
+        case 'caption_this':
+          bot_message($data->nick, t('Ruh roh. Creating @type content is currently borked.', array('@type' => node_type_get_name($nodetype))));
+          break;
+        default:
+          preg_match("/^([^\(]+)(.*)\)?/i", trim($raw), $matches);
+          $title = trim($matches[1]);
+          $body = str_replace(array('(',')'), '', $matches[2]);
+          
+          $node = new stdClass();
+          $node->type = $nodetype;
+          node_object_prepare($node);
+          $node->title = $title;
+          $node->uid = $account->uid;
+
+          $node->language = LANGUAGE_NONE;
+        
+          if (!empty($body)) {
+            $node->body[$node->language][0]['value']   = $body;
+            $node->body[$node->language][0]['summary'] = text_summary($body);
+            $node->body[$node->language][0]['format']  = 'filtered_html';
+          }
+
+          node_save($node);
+          
+          $values = array(
+            '@type' => node_type_get_name($nodetype),
+            '@question' => $question,
+            '!link' => url('node/'.$node->nid, array('absolute' => TRUE)),
+          );
+          $message = t('New @type: @question (!link)', $values);
+          $to = $from_query ? $data->nick : $data->channel;
+          bot_message($to, $message);
+          break;
+      }
+    }
+    else {
+      bot_message($data->nick, t('Sorry, you must be logged in as a contributor to create @type content.', array('@type' => node_type_get_name($nodetype))));
+      return;
+    }
+  }
+}
+
+
+function _pbot_generate_answers() {
+  $answers = array(
+    'absolute' => array(
+      'It is certain',
+      'It is decidedly so',
+      'Without a doubt',
+      'Yes - definitely',
+      'You may rely on it',
+    ),
+    'positive' => array(
+      'As I see it, yes',
+      'Most likely',
+      'Outlook good',
+      'Signs point to yes',
+      'Yes',
+    ),
+    'neutral' => array(
+      'Reply hazy, try again',
+      'Ask again later',
+      'Better not tell you now',
+      'Cannot predict now',
+      'Concentrate and ask again',
+    ),
+    'negative' => array(
+      'Don\'t count on it',
+      'My reply is no',
+      'My sources say no',
+      'Outlook not so good',
+      'Very doubtful',
+    )
+  );
+  
+  $pollanswers = array();
+  foreach($answers as $category => $catanswers) {
+    $pollanswers[] = $answers[$category][array_rand($catanswers)];
+  }
+  
+  return $pollanswers;
+}

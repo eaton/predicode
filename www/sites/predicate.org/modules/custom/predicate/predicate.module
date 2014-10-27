@@ -1,0 +1,61 @@
+<?php
+
+function predicate_preprocess_page(&$vars) {
+  drupal_add_css(drupal_get_path('module', 'predicate') .'/predicate.css', 'module');
+  $vars['site_slogan'] = _predicate_get_slogan();
+  if (($node = $vars['node']) && $node->type == 'caption_this') {
+    $vars['title'] = t('Caption this: %title', array('%title' => $node->title));
+  }
+}
+
+function _predicate_get_slogan() {
+  $query = db_select('node', 'n')->fields('n', array('nid'));
+  $query->join('node_revision', 'nr', 'n.vid = nr.vid');
+  $query->fields('nr', array('title'));
+  $query->condition('n.type', 'tagline');
+  $query->orderRandom();
+  $query->range(NULL, 1);
+
+  if ($result = $query->execute()->fetchAssoc()) {
+    return l($result['title'], 'node/'.$result['nid']);
+  }
+}
+
+function predicate_preprocess_node(&$vars) {
+  $node = $vars['node'];
+  if ($node->type == 'caption_this') {
+    $node->title = 'Caption this: '. $node->title;
+    $vars['title'] = t('Caption this: %title', array('%title' => $vars['title']));
+  }
+}
+
+function predicate_preprocess_comment(&$vars) {
+  if ($vars['node']->type == 'caption_this') {
+    $vars['title'] = $vars['comment']->comment_body['und'][0]['safe_value'];
+  }
+}
+
+// Lock down content that we don't want outsiders to see.
+
+/**
+ * Implements hook_permission().
+ */
+function predicate_permission() {
+  return array(
+    'access music' => array(
+      'title' => t('Access music content'),
+      'description' => t('May view music-related posts on predicate.org.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function predicate_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : $node->type;
+  if (($type == 'song') && ($op == 'view') && !user_access('access music', $account)) {
+    return NODE_ACCESS_DENY;
+  }
+  return NODE_ACCESS_IGNORE;
+}

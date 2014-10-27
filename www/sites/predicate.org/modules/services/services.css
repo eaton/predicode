@@ -1,0 +1,7 @@
+/* $Id: services.css,v 1.6 2010/12/24 17:25:13 ocyrus Exp $ */
+
+#service-browser-arguments .type {
+  width: 40px;
+  display: block;
+  float: left;
+}

@@ -1,0 +1,25 @@
+; $Id: rest_server.info,v 1.3 2010/12/24 17:25:13 ocyrus Exp $
+name = REST Server
+description = Provides an REST server.
+package = Services - servers
+
+files[] = rest_server.module
+
+files[] = includes/models.inc
+files[] = includes/rest_server.views.inc
+files[] = includes/RESTServer.inc
+
+files[] = lib/bencode.php
+files[] = lib/mimeparse.php
+files[] = lib/spyc.php
+
+dependencies[] = services
+dependencies[] = inputstream
+
+core = 7.x
+; Information added by drupal.org packaging script on 2010-12-25
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "services"
+datestamp = "1293236706"
+

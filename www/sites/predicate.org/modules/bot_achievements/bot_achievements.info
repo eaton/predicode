@@ -1,0 +1,6 @@
+name = Bot achievements
+description = Earn achievements on IRC via the bot.
+core = 7.x
+
+dependencies[] = bot
+dependencies[] = achievements

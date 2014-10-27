@@ -1,0 +1,15 @@
+div#comments div.bestreply {
+  background-image: url('predicate-ribbon.png');
+  background-repeat: no-repeat;
+  padding-left: 72px;
+}
+
+div.branding span a {
+  color: white;
+}
+
+div.field-name-field-url img {
+  float: left;
+  margin: 0 10px 10px 0;
+  border: 1px black solid;
+}

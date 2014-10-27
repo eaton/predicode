@@ -1,0 +1,13 @@
+; $Id$
+name = Node Form Settings Tests
+description = "I use this module to test some stuff, DON'T use it"
+core = 7.x
+dependencies[] = bad_judgement
+files[] = nfstest.module
+
+; Information added by drupal.org packaging script on 2011-05-25
+version = "7.x-2.x-dev"
+core = "7.x"
+project = "nodeformsettings"
+datestamp = "1306283748"
+

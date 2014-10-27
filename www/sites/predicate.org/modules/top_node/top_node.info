@@ -1,0 +1,13 @@
+;$Id: top_node.info,v 1.1.4.1 2010/01/17 19:26:13 eaton Exp $
+name = Top node
+description = Provides a Views Display that shows a single node page, complete with comments and comment form.
+dependencies[] = views
+package = Views
+core = 7.x
+
+files[] = top_node.module
+files[] = top_node.views.inc
+files[] = top_node.views_default.inc
+files[] = top_node_plugin_display_single_node_page.inc
+files[] = top_node_plugin_style_full_node.inc
+

@@ -1,0 +1,44 @@
+; $Id: typebased.info,v 1.4 2010/06/27 09:07:26 jarek Exp $ 
+
+name = Typebased
+description = Typebased theme.
+version = VERSION
+core = 7.x
+engine = phptemplate
+
+stylesheets[all][]   = base.css
+stylesheets[all][]   = modules.css
+stylesheets[all][]   = page.css
+stylesheets[all][]   = system.css
+stylesheets[all][]   = colors.css
+
+regions[sidebar]              = Sidebar
+regions[content]              = Content
+regions[footer_column_first]  = Footer first column
+regions[footer_column_second] = Footer second column
+regions[help]                 = Help
+regions[page_top]             = Page top
+regions[page_bottom]          = Page bottom
+
+settings[base_font_size]        = '12px'
+settings[layout_1_width]        = '75%'
+settings[layout_1_min_width]    = '500px'
+settings[layout_1_max_width]    = '900px'
+settings[layout_2_width]        = '85%'
+settings[layout_2_min_width]    = '850px'
+settings[layout_2_max_width]    = '1000px'
+settings[trim_pager]            = '5'
+
+; Information added by drupal.org packaging script on 2010-06-07
+version = "7.x-1.0-rc1"
+core = "7.x"
+project = "typebased"
+datestamp = "1275945608"
+
+
+; Information added by drupal.org packaging script on 2010-08-11
+version = "7.x-1.5"
+core = "7.x"
+project = "typebased"
+datestamp = "1281522092"
+

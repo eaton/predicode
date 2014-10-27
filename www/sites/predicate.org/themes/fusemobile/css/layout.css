@@ -1,0 +1,49 @@
+
+/** Layout
+---------------------------------
+*  Using a negative margin technique, adapted from ZEN. The page is loaded by this order:
+*
+*  1. Header
+*  2. Content
+*  3. Navigation menus
+*  4. Sidebar Left
+*  5. Sideabr Right
+*
+*/
+
+
+/** LAYOUT RULES
+---------------------------------
+*  do not change if you're not sure you know what you're doing
+*/
+
+#content {
+  width: 100%;
+  padding: 0;
+}
+#footer {
+  float: none;
+  clear: both;
+}
+
+/* Layout Helpers */
+
+#header, #footer, .breadcrumb, .node {
+  clear: both;
+}
+
+
+/** Columns inner
+---------------------------------
+*  You can change the padding inside the columns without changing the
+*  width of them by just usinbg the INNER div of each column
+*/
+
+.inner {
+	padding: 0px;
+}
+
+#navigation {
+  padding: 0;
+  width: 100%;
+}

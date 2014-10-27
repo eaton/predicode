@@ -1,0 +1,28 @@
+
+.canvas-wrapper {
+	margin:10px;
+}
+.canvas-wrapper .tools-wrapper {
+	float:left;
+	height:100%;
+	padding:5px;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-bottom-left-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-bottomleft: 10px;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;	
+}
+
+.canvas-wrapper .tools-wrapper .toolbar-icon {
+	width:16px;
+	height:16px;
+	padding:3px 4px;
+	display:block;
+}
+
+.canvas-wrapper .tools-wrapper .toolbar-icon.selected {
+	border:1px inset black;
+	padding:2px 3px;
+	cursor:pointer;
+}

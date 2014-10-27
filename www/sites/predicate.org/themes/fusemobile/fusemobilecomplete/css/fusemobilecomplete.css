@@ -1,0 +1,7 @@
+h1#site-name a {color: #fff;}
+body {background:#ddd;}
+#header { height: 55px;margin-bottom: 10px; -moz-box-shadow:0 2px 3px #AAAAAA; -webkit-box-shadow:0 2px 3px #AAAAAA; background-color:#444444; border-bottom:1px solid #333333; padding:2px;}
+#header, #footer { }
+#navigation {margin-bottom: 5px; }
+.inner {margin: 10px;}
+#content-inner { margin-top: 0;}

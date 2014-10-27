@@ -1,0 +1,26 @@
+; $Id: services.info,v 1.11 2010/12/24 17:25:13 ocyrus Exp $
+name = Services
+description = Provide an API for creating web services.
+package = Services
+core = 7.x
+php = 5.x
+
+files[] = services.module
+files[] = services.admin.inc
+files[] = services.authentication.api.php
+files[] = services.install
+files[] = services.resource_build.inc
+files[] = services.runtime.inc
+files[] = services.servers.api.php
+files[] = serviers.services.api.php
+files[] = tests/functional/NoAuthEndpointTestRunner.test
+files[] = tests/functional/ServicesResourceNodeTests.test
+files[] = tests/functional/ServicesEndpointTests.test
+files[] = tests/unit/TestServicesModule.test
+dependencies[] = ctools
+; Information added by drupal.org packaging script on 2010-12-25
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "services"
+datestamp = "1293236706"
+

@@ -1,0 +1,253 @@
+<?php
+// $Id: canvas_field.module,v 1.1.2.2 2010/11/04 05:35:33 rbayliss Exp $
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function canvas_field_field_widget_info() {
+  return array(
+    'canvas_widget' => array(
+      'label' => t('Canvas Widget'),
+      'field types' => array('image'),
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+        'style' => array(
+          'background-color' => NULL,
+          'border-color' => '#CCC',
+          'border-width' => '5',
+          'border-style' => 'solid',
+        ),
+        'canvas_default_size' => '400x200',
+        'color' => TRUE,
+      ),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_NONE,
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function canvas_field_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+  $form = array();
+
+  $canvas_size = explode('x', $settings['canvas_default_size']) + array('', '');
+  $form['canvas_default_size'] = array(
+    '#type' => 'item',
+    '#title' => t('Default Canvas Size'),
+    '#description' => t('The default size of the editing canvas expressed as WIDTHxHEIGHT.'),
+    '#field_prefix' => '<div class="container-inline">',
+    '#field_suffix' => '</div>',
+    '#element_validate' => array('_image_field_resolution_validate'),
+
+    'x' => array(
+      '#type' => 'textfield',
+      '#default_value' => $canvas_size[0],
+      '#size' => 5,
+      '#field_suffix' => 'x',
+    ),
+    'y' => array(
+      '#type' => 'textfield',
+      '#default_value' => $canvas_size[1],
+      '#size' => 5,
+      '#field_suffix' => 'pixels',
+    ),
+  );
+  $form['style'] = array(
+    '#tree' => TRUE,
+    'background-color' => array(
+      '#type' => 'textfield',
+      '#title' => t('Background Color'),
+      '#default_value' => $settings['style']['background-color'],
+      '#size' => 8,
+      '#maxlength' => 6,
+      '#field_prefix' => '#',
+      '#description' => t('Enter the hexadecimal color code you want as a background color for your canvas. (e.g. FFFFFF)'),
+    ),
+    'border-color' => array(
+      '#type' => 'textfield',
+      '#title' => t('Border Color'),
+      '#default_value' => $settings['style']['border-color'],
+      '#size' => 8,
+      '#maxlength' => 6,
+      '#field_prefix' => '#',
+      '#description' => t('Enter the hexadecimal color code you want as a border color for your canvas. (e.g. FFFFFF)')
+    ),
+    'border-width' => array(
+      '#type' => 'textfield',
+      '#title' => t('Border Width'),
+      '#default_value' => $settings['style']['border-width'],
+      '#size' => 3,
+      '#maxlength' => 3,
+      '#field_suffix' => 'px',
+      '#description' => t('Enter the pixel width of the border you want to use for the canvas.'),
+    ),
+    'border-style' => array(
+      '#type' => 'select',
+      '#title' => t('Border Style'),
+      '#default_value' => $settings['style']['border-style'],
+      '#options' => array(
+        'solid' => t('Solid'),
+        'dotted' => t('Dotted'),
+        'inset' => t('Inset'),
+        'outset' => t('Outset'),
+      ),
+
+      '#description' => t('Choose the border style of the canvas border.'),
+    ),
+  );
+  $form['color'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow Color Selection'),
+    '#default_value' => $settings['color'],
+  );
+
+  return $form;
+}
+
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function canvas_field_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $field_js_settings = array();
+  $field_js_settings['style'] = $instance['widget']['settings']['style'];
+  list($field_js_settings['style']['width'], $field_js_settings['style']['height']) = explode('x', $instance['widget']['settings']['canvas_default_size']);
+  $field_js_settings['style']['border-color'] = '#' . $field_js_settings['style']['border-color'];
+  $field_js_settings['style']['background-color'] = '#' . $field_js_settings['style']['background-color'];
+  $field_js_settings['style']['border-width'] .= 'px';
+  $field_js_settings['icon_path'] = drupal_get_path('module', 'canvas_field') . '/img/';
+
+  if ($instance['widget']['settings']['color']) {
+    drupal_add_library('system', 'ui.dialog');
+    drupal_add_library('system', 'farbtastic');
+  }
+
+  drupal_add_js(array('canvas_field' => $field_js_settings), 'setting');
+  drupal_add_js(drupal_get_path('module', 'canvas_field') . '/canvas_field.js');
+  drupal_add_css(drupal_get_path('module', 'canvas_field') . '/canvas_field.css');
+
+  $elements = image_field_widget_form($form, $form_state, $field, $instance, $langcode, $items, $delta, $element);
+
+  foreach (element_children($elements) as $delta) {
+    $elements[$delta]['#process'][] = 'canvas_field_field_widget_process';
+    $elements[$delta]['#file_value_callbacks'][] = 'canvas_field_value';
+  }
+
+  return $elements;
+}
+
+/**
+ * Value callback for canvas_field widget.
+ *
+ * Takes a dataurl and saves it to a file.  Duplicates much of the
+ * functionality provided in file.inc's file_save_upload(), which
+ * we can't use, since our file won't pass through is_uploaded_file().
+ */
+function canvas_field_value(&$element, &$input) {
+
+  if (!empty($input['dataurl'])) {
+    $data = canvas_field_process_dataURL($input['dataurl']);
+    if ($data) {
+      if ($input['fid']) {
+        $old_file = file_load($input['fid']);
+        file_delete($old_file);
+      }
+      if ($element['#upload_location']) {
+        file_prepare_directory($element['#upload_location'], FILE_CREATE_DIRECTORY);
+        $filename = 'temporary://' . time() . $data->extension;
+        $file = file_save_data($data->data, $filename, FILE_EXISTS_REPLACE);
+
+        $validators = $element['#upload_validators'] + $validators['file_validate_name_length'] = array();
+        //Empty return value means validation was successful.
+        if (!$errors = file_validate($file, $validators)) {
+          $file->status = 0;
+          $file = file_move($file, $element['#upload_location'], FILE_EXISTS_REPLACE);
+
+          $element['#default_value']['fid'] = $input['fid'] = $file->fid;
+          $input['dataurl'] = 0;
+        }
+        else {
+          file_delete($file);
+          foreach ($errors as $error) {
+            form_set_error($element['#id'], $error);
+          }
+        }
+      }
+    }
+  }
+  $input+= array(
+    'dataurl' => NULL,
+  );
+
+  return $input;
+}
+
+
+/**
+ * Process function for canvas field widget.
+ */
+function canvas_field_field_widget_process($element, &$form_state, $form) {
+  $current_values = drupal_array_get_nested_value($form_state['input'], $element['#parents']);
+
+  if ($element['#file']) {
+    $url = file_create_url($element['#file']->uri);
+  }
+
+  //Rel attribute holds the image url which is then converted to a dataURL.
+  $attributes = array('class' => 'canvas_field', 'rel' => isset($url) ? $url : NULL);
+
+  //The hidden form field that will make our canvas.
+  //No default value because we will handle img -> dataURL conversion on the client side.
+  $element['dataurl'] = array(
+    '#type' => 'hidden',
+    '#attributes' => $attributes,
+    '#title' => $element['#title'],
+    '#default_value' => 0,
+    '#access' => (!$element['#value']['fid']),
+  );
+
+  return $element;
+}
+
+/**
+ * Helper function for processing a dataurl into an object.
+ * This could easily be accomplished by fopen-ing the URL as a stream,
+ * but this seems to open up many more security vulnerabilities than
+ * simply parsing the data as a string.
+ */
+function canvas_field_process_dataURL($string) {
+  $image_mimes = array(
+    'image/png' => '.png',
+    'image/jpg' => '.jpg',
+  );
+
+  if (preg_match('|^data:(\/)*image\/[\w]*;base64[\S]*$|', $string)) {
+    list($metadata, $data)  = explode(',', $string);
+    list($metadata, $encoding) = explode(';', $metadata);
+    list($scheme, $mime) = explode(':', $metadata);
+
+    $dataurl = new stdClass();
+    $dataurl->data = base64_decode($data);
+    $dataurl->encoding = $encoding;
+    $dataurl->mime = $mime;
+    $dataurl->scheme = $scheme;
+    $dataurl->extension = $image_mimes[$mime];
+
+    if ($dataurl->data && $dataurl->extension) {
+        return $dataurl;
+    }
+  }
+  return FALSE;
+}
+
+
+
+

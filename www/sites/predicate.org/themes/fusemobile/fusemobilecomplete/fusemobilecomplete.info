@@ -1,0 +1,22 @@
+base theme = fusemobile
+name = fusemobilecomplete
+description = fusemobile starter theme for mobile devices developed by Fuse Interactive for Drupal 6.
+screenshot = css/images/screenshot.png
+core = "7.x"
+project = "fusemobile"
+engine = phptemplate
+
+features[] = logo
+features[] = name
+features[] = search
+features[] = favicon
+features[] = primary_links
+features[] = secondary_links
+
+stylesheets[all][] = css/fusemobilecomplete.css
+; Information added by drupal.org packaging script on 2010-10-09
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "fusemobile"
+datestamp = "1286582983"
+

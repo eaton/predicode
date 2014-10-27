@@ -1,0 +1,10 @@
+<?php
+// $Id: cck_blocks.install,v 1.3 2010/03/19 16:15:31 forschi Exp $
+
+/**
+ * Implements hook_uninstall().
+ */
+function cck_blocks_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'cck_blocks%'");
+
+}

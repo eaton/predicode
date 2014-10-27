@@ -1,0 +1,29 @@
+name = fusemobile
+description = fusemobile starter theme for mobile devices developed by Fuse Interactive for Drupal 6.
+screenshot = css/images/screenshot.png
+core = "7.x"
+project = "fusemobile"
+engine = phptemplate
+
+regions[page_top] = Page top
+regions[header] = Header
+regions[highlight] = Highlight
+regions[help] = Help
+regions[content] = Content
+regions[footer] = Footer
+regions[page_bottom] = Page bottom
+
+stylesheets[all][] = css/default.css
+stylesheets[all][] = css/layout.css
+stylesheets[all][] = css/style.css
+
+scripts[] = scripts/fusemobile.js
+
+
+
+; Information added by drupal.org packaging script on 2010-10-09
+version = "7.x-1.x-dev"
+core = "7.x"
+project = "fusemobile"
+datestamp = "1286582983"
+

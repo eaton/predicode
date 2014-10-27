@@ -1,0 +1,14 @@
+; $Id: dialectic.info,v 1.1.2.1.2.1 2008/06/20 20:10:16 eaton Exp $
+name = Dialectic
+description = Adds a set of novelty translation filters.
+core = 7.x
+
+; Information added by drupal.org packaging script on 2010-07-11
+version = "6.x-1.x-dev"
+core = 7.x
+project = "dialectic"
+datestamp = "1278833945"
+
+
+files[] = dialectic.inc
+files[] = dialectic.module

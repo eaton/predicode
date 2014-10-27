@@ -1,0 +1,146 @@
+<?php
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function dialectic_menu() {
+  $items = array();
+
+  $items['dialectic'] = array(
+    'title' => 'Dialectic',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dialectic_form'),
+    'access arguments' => array('access dialect translator'),
+  );
+
+  return $items;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function dialectic_permission() {
+  return array(
+    'access dialect translator' => array(
+      'title' => t('access dialect translator'),
+      'description' => t('Translate text using Dialectic'),
+    ),
+  );
+}
+
+function _dialectic_filters() {
+  return array_flip(array(
+    'Pirate' => 'pirate',
+    'Swedish chef' => 'chef',
+    'Elmer Fudd' => 'fudd',
+    'Morse code' => 'morse',
+    'Pig latin' => 'pig',
+    'Rot13' => 'rot13',
+    'Underwater' => 'ubby',
+    'w4r3z d00dz' => 'warez',
+    'Jive' => 'jive',
+    'Upside-down' => 'upsidedown',
+  ));
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function _dialectic_filter_tips($filter, $format, $long = FALSE) {
+  if ($long) {
+    return t("This site allows you to use tags like [chef] and [rot13] to automatically translate text. To use them when you write, surround the text you want to translate or alter [chef]like this.[/chef]. Valid dialects are: !dialects.", array('!dialects' => implode(', ', array_keys(_dialectic_filters()))));
+  }
+  else {
+    return t('Text can be translated into novelty dialects using [chef]tags like this.[/chef]');
+  }
+}
+
+/**
+ * Implements hook_filter().
+ */
+function dialectic_filter_info() {
+  $filters['dialectic'] = array(
+    'title' => t('Dialectic filter'), 
+    'description' => t('Lets writers use a variety of BB-code style tags to translate their text into other dialects. Supported dialects include: !dialects.', array('!dialects' => implode(', ', array_values(_dialectic_filters())))),
+    'process callback' => '_dialectic_filter', 
+    'tips callback' => '_dialectic_filter_tips',
+  );
+
+  return $filters;
+}
+
+
+/**
+ * Filter callback. Does the actual work.
+ */
+function _dialectic_filter($text, $filter) {
+  $filters = implode('|', array_keys(_dialectic_filters()));
+  $pattern = "/\[(" . $filters . ")\](.*)\[\/(" . $filters . ")\]/e";
+  return preg_replace($pattern, "dialectic_replace('\\2', '\\1')", $text);
+}
+
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function dialectic_form($form, $form_state) {
+  $form['#cache'] = FALSE;
+
+  if (!empty($form_state['values'])) {
+    $form['results'] = array(
+      '#type' => 'item',
+      '#title' => t('Results'),
+      '#value' => dialectic_replace(strip_tags($form_state['values']['text']), $form_state['values']['dialect']),
+    );
+  }
+
+  $form['dialect'] = array(
+    '#type' => 'select',
+    '#title' => t('Dialect'),
+    '#options' => _dialectic_filters(),
+    '#default_value' => empty($form_state['values']['dialect']) ? '' : $form_state['values']['dialect'],
+  );
+
+  $form['text'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Text to translate'),
+    '#default_value' => empty($form_state['values']['text']) ? '' : $form_state['values']['text'],
+    '#rows' => 10,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Submit',
+  );
+
+  return $form;
+}
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function dialectic_form_submit($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+  $form_state['redirect'] = FALSE;
+}
+
+
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function dialectic_replace($text, $type) {
+  module_load_include('inc', 'dialectic');
+  $function = 'dialectic_' . $type;
+  if (function_exists($function)) {
+    return $function($text);
+  }
+  else {
+    return $text;
+  }
+}
